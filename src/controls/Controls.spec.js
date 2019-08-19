@@ -1,12 +1,9 @@
 // Test away!
 import React from 'react';
-import render from 'react-testing-library'
+import { render, fireEvent } from '@testing-library/react'
 import renderer from 'react-test-renderer';
-//Import react-test-renderer as a --dev dependency and then import
-
 
 import Controls from './Controls'; //Importing componenet that we are testing
-
 
 describe('<Controls />', () => {
     it('should match snapshot', () => {
@@ -14,7 +11,36 @@ describe('<Controls />', () => {
 
         expect(tree).toMatchSnapshot();
     });
-    it('defaults to unlocked and open', () => {
 
-    })
+    //Checks that the gate is locked and closed
+    it('should be lock and close by default', () => {
+        const Spy = jest.fn()
+        const { getByText, queryByText } = render(<Controls locked={false} closed={false} toggleClosed={Spy} />);
+
+        // Grabbing the expected text and saving to a var
+        const lock = queryByText("Locked Gate")
+        const close = queryByText("Close Gate")
+
+        const unlock = queryByText("Unlocked Gate")
+        const open = queryByText("Open Gate")
+
+        //Checking that the expected text equals expected saved value
+        expect(lock)
+        expect(close)
+
+        // fireEvent.click(lock)
+        // expect(unlock)
+
+        // fireEvent.click(close)
+        // expect(open)
+
+    });
+
+    //Checks that the gate is unlocked and open
+    it('should be unlock and open by default', () => {
+        const { getByText } = render(<Controls locked={true} closed={true} />);
+
+        expect(getByText(/unlock gate/i));
+        expect(getByText(/open gate/i));
+    });
 });
